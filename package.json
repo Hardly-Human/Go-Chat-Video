@@ -1,0 +1,18 @@
+{
+	"name": "zoom-clone",
+	"version": "1.0.0",
+	"description": "",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Hardly-Human/Zoom-Clone-with-WebRTC.git"
+	},
+	"author": "Shaik Rehanuddin",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/Hardly-Human/Zoom-Clone-with-WebRTC/issues"
+	},
+	"homepage": "https://github.com/Hardly-Human/Zoom-Clone-with-WebRTC#readme"
+}
