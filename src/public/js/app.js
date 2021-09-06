@@ -15,10 +15,14 @@ async function getCameras() {
 		const cameras = devices.filter(
 			(device) => device.kind === "videoinput"
 		);
+		const currentCamera = myStream.getVideoTracks()[0];
 		cameras.forEach((camera) => {
 			const option = document.createElement("option");
 			option.value = camera.deviceId;
 			option.innerText = camera.label;
+			if (currentCamera.label === camera.label) {
+				option.selected = true;
+			}
 			camerasSelect.appendChild(option);
 		});
 	} catch (e) {
@@ -26,14 +30,23 @@ async function getCameras() {
 	}
 }
 
-async function getMedia() {
+async function getMedia(deviceId) {
+	const initialConstrains = {
+		audio: true,
+		video: { facingMode: "user" },
+	};
+	const cameraConstraints = {
+		audio: true,
+		video: { deviceId: { exact: deviceId } },
+	};
 	try {
-		myStream = await navigator.mediaDevices.getUserMedia({
-			audio: true,
-			video: true,
-		});
+		myStream = await navigator.mediaDevices.getUserMedia(
+			deviceId ? cameraConstraints : initialConstrains
+		);
 		myFace.srcObject = myStream;
-		await getCameras();
+		if (!deviceId) {
+			await getCameras();
+		}
 	} catch (e) {
 		console.log(e);
 	}
@@ -41,7 +54,7 @@ async function getMedia() {
 
 getMedia();
 
-function handleMuteClick() {
+muteBtn.addEventListener("click", () => {
 	myStream
 		.getAudioTracks()
 		.forEach((track) => (track.enabled = !track.enabled));
@@ -52,8 +65,8 @@ function handleMuteClick() {
 		muteBtn.innerText = "Mute";
 		muted = false;
 	}
-}
-function handleCameraClick() {
+});
+cameraBtn.addEventListener("click", () => {
 	myStream
 		.getVideoTracks()
 		.forEach((track) => (track.enabled = !track.enabled));
@@ -64,7 +77,7 @@ function handleCameraClick() {
 		cameraBtn.innerText = "Turn Camera On";
 		cameraOff = true;
 	}
-}
-
-muteBtn.addEventListener("click", handleMuteClick);
-cameraBtn.addEventListener("click", handleCameraClick);
+});
+camerasSelect.addEventListener("input", async () => {
+	await getMedia(camerasSelect.value);
+});
