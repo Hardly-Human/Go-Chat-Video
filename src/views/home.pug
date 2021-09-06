@@ -12,11 +12,17 @@ html(lang="en")
             h1 Just Us
 
         main
-            div#myStream
-                video#myFace(autoplay,playsinline, width="400", height="400")
-                button#mute Mute
-                button#camera Turn Camera Off
-                select#cameras
+            div#welcome
+                form
+                    h2 Select a Room Name
+                    input(placeholder="room name", required, type="text")
+                    button Enter room
+            div#call
+                div#myStream
+                    video#myFace(autoplay,playsinline, width="400", height="400")
+                    button#mute Mute
+                    button#camera Turn Camera Off
+                    select#cameras
 
 
         script(src="/socket.io/socket.io.js")
