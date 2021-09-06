@@ -1,6 +1,7 @@
 const path = require("path");
 const http = require("http");
 const express = require("express");
+const SocketIO = require("socket.io");
 
 const app = express();
 const PORT = 3000;
@@ -13,7 +14,9 @@ app.use("/public", express.static(path.join(__dirname, "/public")));
 app.get("/", (req, res) => {
 	res.render("home");
 });
+app.get("/*", (req, res) => res.redirect("/"));
 
 const httpServer = http.Server(app);
+const wsServer = SocketIO(httpServer);
 
 httpServer.listen(PORT, () => console.log("Server running on port :", PORT));
