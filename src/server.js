@@ -4,6 +4,7 @@ const SocketIO = require("socket.io");
 const express = require("express");
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname + "/views"));
@@ -30,4 +31,4 @@ wsServer.on("connection", (socket) => {
 	});
 });
 
-httpServer.listen(3000, () => console.log("Listening on Port : 3000"));
+httpServer.listen(PORT, () => console.log(`Listening on Port : ${PORT}`));
