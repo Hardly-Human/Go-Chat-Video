@@ -5,8 +5,13 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "/views"));
+
+app.use("/public", express.static(path.join(__dirname, "/public")));
+
 app.get("/", (req, res) => {
-	res.send("Basic Server Setup");
+	res.render("home");
 });
 
 const httpServer = http.Server(app);
