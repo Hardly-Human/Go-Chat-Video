@@ -12,6 +12,7 @@ let myStream;
 let muted = false;
 let cameraOff = false;
 let roomName;
+let myPeerConnection;
 
 async function getCameras() {
 	try {
@@ -56,9 +57,7 @@ async function getMedia(deviceId) {
 	}
 }
 
-getMedia();
-
-muteBtn.addEventListener("click", () => {
+function handleMuteClick() {
 	myStream
 		.getAudioTracks()
 		.forEach((track) => (track.enabled = !track.enabled));
@@ -69,8 +68,8 @@ muteBtn.addEventListener("click", () => {
 		muteBtn.innerText = "Mute";
 		muted = false;
 	}
-});
-cameraBtn.addEventListener("click", () => {
+}
+function handleCameraClick() {
 	myStream
 		.getVideoTracks()
 		.forEach((track) => (track.enabled = !track.enabled));
@@ -81,20 +80,26 @@ cameraBtn.addEventListener("click", () => {
 		cameraBtn.innerText = "Turn Camera On";
 		cameraOff = true;
 	}
-});
-camerasSelect.addEventListener("input", async () => {
-	await getMedia(camerasSelect.value);
-});
+}
 
-// Welcome-Form
+async function handleCameraChange() {
+	await getMedia(camerasSelect.value);
+}
+
+muteBtn.addEventListener("click", handleMuteClick);
+cameraBtn.addEventListener("click", handleCameraClick);
+camerasSelect.addEventListener("input", handleCameraChange);
+
+// Welcome Form (join a room)
 
 const welcome = document.getElementById("welcome");
 const welcomeForm = welcome.querySelector("form");
 
-function startMedia() {
+async function startMedia() {
 	welcome.hidden = true;
 	call.hidden = false;
-	getMedia();
+	await getMedia();
+	makeConnection();
 }
 
 function handleWelcomeSubmit(event) {
@@ -109,6 +114,22 @@ welcomeForm.addEventListener("submit", handleWelcomeSubmit);
 
 // Socket Code
 
-socket.on("welcome", () => {
-	console.log("someone joined");
+socket.on("welcome", async () => {
+	const offer = await myPeerConnection.createOffer();
+	myPeerConnection.setLocalDescription(offer);
+	console.log("sent the offer");
+	socket.emit("offer", offer, roomName);
 });
+
+socket.on("offer", (offer) => {
+	console.log(offer);
+});
+
+// RTC Code
+
+function makeConnection() {
+	myPeerConnection = new RTCPeerConnection();
+	myStream
+		.getTracks()
+		.forEach((track) => myPeerConnection.addTrack(track, myStream));
+}
