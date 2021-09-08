@@ -25,7 +25,7 @@ This Project is Buit with a VanillaJS (Frontend) and NodeJS (Backend) with WebRT
 
 -   Real-Time Video Chat like Zoom, Google Meet { Just Enter any random room with a partner to chat }
 -   Mute and Camera controls with switching camera features.
--   Fuuly secure { App works on Peer-to-Peer network and No data is transfered to servers }
+-   Fully secure { App works on Peer-to-Peer network and No data is transfered to servers }
 
 ## Links
 
